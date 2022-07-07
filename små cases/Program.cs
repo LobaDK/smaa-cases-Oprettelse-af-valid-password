@@ -21,7 +21,7 @@ namespace små_cases
                     {
                         if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "password.txt")).Length != 0) //tjekker om password filen er tom
                         {
-                            //kald input login funktion hvis filen ikke er tom
+                            //kald login funktion hvis filen ikke er tom
                             Password.Login();
                         }
                         else
@@ -53,8 +53,9 @@ namespace små_cases
             do
             {
                 Console.Clear();
-                Console.Write("brugernavn: "); //spørg om brugerens brugernavn
-                brugernavn = Console.ReadLine().ToLower();
+                Console.WriteLine("Velkommen til! Ingen bruger fundet, venlist opret en.");
+                Console.Write("\nbrugernavn: "); //spørg om brugerens brugernavn
+                brugernavn = Console.ReadLine().ToLower(); //gem brugernavn i lowercase så det er nemmere at sammenligne
                 if (string.IsNullOrWhiteSpace(brugernavn)) //tjekker 
                 {
                     Console.WriteLine("\nBrugernavn kan ikke være tomt");
@@ -66,44 +67,21 @@ namespace små_cases
                     do
                     {
                         Passwordvalidate passwordvalidate = new Passwordvalidate();
-                        Console.Write("Skriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
+                        Console.Write("\nSkriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
                         passwordinput = Console.ReadLine();
-                        
-                        if (passwordvalidate.IsEmpty(passwordinput))
-                        {
-                            continue;
-                        }
                         lastchar = passwordinput.Last();
-                        if (passwordvalidate.MatchUsername(brugernavn, passwordinput))
-                        {
-                            continue;
-                        }
-                        else if (passwordvalidate.IsOver12(passwordinput))
-                        {
-                            continue;
-                        }
-                        else if (passwordvalidate.IsLowerAndUpper(passwordinput))
-                        {
-                            continue;
-                        }
-                        else if (passwordvalidate.HasSpecialCharAndNumber(passwordinput))
-                        {
-                            continue;
-                        }
-                        else if (passwordvalidate.StartOrEndWithNumber(passwordinput, lastchar))
-                        {
-                            continue;
-                        }
-                        else if (passwordvalidate.HasSpace(passwordinput))
+                        
+                        if (!Password.PasswdCheck(passwordinput,brugernavn))
                         {
                             continue;
                         }
                         else
                         {
                             string[] login = { brugernavn, passwordinput }; //lav string array der heder login, med brugernavn og passwordinput variabler
-                            try //prøver at skrive indeholdet af array til password.txt fil
+                            try 
                             {
-                                File.WriteAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt"), login);
+                                File.WriteAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt"), login); //prøver at skrive indeholdet af array til password.txt fil
+                                File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "passwdhistory.txt"), passwordinput); //prøver at skrive password til historik fil
                             }
                             catch (Exception e)
                             {
@@ -112,7 +90,7 @@ namespace små_cases
                                 Console.Clear();
                                 continue;
                             }
-                            Console.WriteLine("Password gemt!");
+                            Console.WriteLine("\nPassword gemt!");
                             Thread.Sleep(3000);
                             Console.Clear();
                             return;
@@ -131,16 +109,49 @@ namespace små_cases
                 string brugernavn = "", passwordlogin = ""; //opret string variabler brugernavn og passwordlogin
                 List<string> skrevetlogin = new List<string>(); //opret string list variable skrevetlogin
                 string[] gemtlogin = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt")); //læs og gem hvert linje i tekstfil i array
-                Console.WriteLine("Du er nu ved at logge ind");
+                Console.WriteLine("Velkommen!");
+                Console.WriteLine("\nSkriv dit brugernavn og password for at logge ind.");
                 Console.Write("\nBrugernavn: ");
-                brugernavn = Console.ReadLine().ToLower();
+                brugernavn = Console.ReadLine().ToLower(); //gem brugernavn i lowercase så det er nemmere at sammenligne
                 Console.Write("\nPassword: ");
                 passwordlogin = Console.ReadLine();
                 skrevetlogin.Add(brugernavn); //tilføj brugernavn til list
                 skrevetlogin.Add(passwordlogin); //tilføj password til list
                 if (gemtlogin.SequenceEqual(skrevetlogin.ToArray())) //koverter list til array og sammenlign dem
                 {
-                    Console.WriteLine("\nWelkommen ind!");
+                    do
+                    {
+                        string appmenu;
+                        Console.Clear();
+                        Console.WriteLine("\nWelkommen ind!");
+                        Console.Write("Tryk 1 for at starte app1\nTryk 2 for at starte app2\nTryk 3 for at ændre dit password: ");
+                        appmenu = Console.ReadLine().ToUpper();
+                        if (appmenu == "1")
+                        {
+                            Console.WriteLine("App1");
+                            Thread.Sleep(2000);
+                            continue;
+                        }
+                        else if (appmenu == "2")
+                        {
+                            Console.WriteLine("App2");
+                            Thread.Sleep(2000);
+                            continue;
+                        }
+                        else if (appmenu == "3")
+                        {
+                            Console.WriteLine("Skriv dit nye password");
+                            passwordlogin = Console.ReadLine();
+
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("{0} er ikke en mulighed", appmenu);
+                            Thread.Sleep(2000);
+                            continue;
+                        }
+                    } while (true);
                 }
                 else
                 {
@@ -151,10 +162,44 @@ namespace små_cases
                 }
             } while (true);
         }
+        static bool PasswdCheck(string passwordinput, string brugernavn)
+        {
+            char lastchar = passwordinput.Last();
+            Passwordvalidate passwordvalidate = new Passwordvalidate();
+            if (passwordvalidate.IsEmpty(passwordinput))
+            {
+                return false;
+            }
+            if (passwordvalidate.MatchUsername(brugernavn, passwordinput))
+            {
+                return false;
+            }
+            else if (passwordvalidate.IsOver12(passwordinput))
+            {
+                return false;
+            }
+            else if (passwordvalidate.IsLowerAndUpper(passwordinput))
+            {
+                return false;
+            }
+            else if (passwordvalidate.HasSpecialCharAndNumber(passwordinput))
+            {
+                return false ;
+            }
+            else if (passwordvalidate.StartOrEndWithNumber(passwordinput, lastchar))
+            {
+                return false;
+            }
+            else if (passwordvalidate.HasSpace(passwordinput))
+            {
+                return false;
+            }
+            else return true;
+        }
     }
-    class Passwordvalidate
+    class Passwordvalidate //opret klasse Passwordvalidate
     {
-        public bool IsEmpty(string passwordinput)
+        public bool IsEmpty(string passwordinput) //opret bool IsEmpty metode
         {
             if (string.IsNullOrWhiteSpace(passwordinput)) //tjek om password er tomt eller kun whitespaces
             {
@@ -168,7 +213,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool MatchUsername(string brugernavn, string passwordinput)
+        public bool MatchUsername(string brugernavn, string passwordinput) //opret bool MatchUsername metode
         {
             if (brugernavn.ToLower() == passwordinput.ToLower()) //tjek om password matcher brugernavn
             {
@@ -182,7 +227,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool IsOver12(string passwordinput)
+        public bool IsOver12(string passwordinput) //opret bool IsOver12 metode
         {
             if (passwordinput.Length < 12) //tjek om password er under 12 tegn
             {
@@ -196,7 +241,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool IsLowerAndUpper(string passwordinput)
+        public bool IsLowerAndUpper(string passwordinput) //opret bool IsLowerandUpper metode
         {
             if (!passwordinput.Any(char.IsUpper) | !passwordinput.Any(char.IsLower)) //tjek om password ikke har store og små tegn
             {
@@ -210,7 +255,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool HasSpecialCharAndNumber(string passwordinput)
+        public bool HasSpecialCharAndNumber(string passwordinput) //opret bool HasSpecialCharAndNumber metode
         {
             if (passwordinput.All(char.IsLetterOrDigit) | !passwordinput.Any(char.IsNumber)) //tjek om password kun har normale tegn
             {
@@ -224,7 +269,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool StartOrEndWithNumber(string passwordinput, char lastchar)
+        public bool StartOrEndWithNumber(string passwordinput, char lastchar) //opret bool StartOrEndWithNumber metode
         {
             if (char.IsDigit(passwordinput[0]) | char.IsDigit(lastchar)) //tjek om password starter eller slutter med et tal
             {
@@ -238,7 +283,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool HasSpace(string passwordinput)
+        public bool HasSpace(string passwordinput) //opret bool HasSpace metode
         {
             if (passwordinput.Any(char.IsWhiteSpace)) //tjek om password has et mellemrum/whitespace
             {
