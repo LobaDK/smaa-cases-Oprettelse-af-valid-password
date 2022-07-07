@@ -49,7 +49,6 @@ namespace små_cases
         {
             string passwordinput; //opret passwordinput string variable
             string brugernavn; //opret brugernavn string variable
-            char lastchar; //opret lastchar char variable
             do
             {
                 Console.Clear();
@@ -66,10 +65,8 @@ namespace små_cases
                 {
                     do
                     {
-                        Passwordvalidate passwordvalidate = new Passwordvalidate();
                         Console.Write("\nSkriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
                         passwordinput = Console.ReadLine();
-                        lastchar = passwordinput.Last();
                         
                         if (!Password.PasswdCheck(passwordinput,brugernavn))
                         {
@@ -106,7 +103,7 @@ namespace små_cases
         {
             do
             {
-                string brugernavn = "", passwordlogin = ""; //opret string variabler brugernavn og passwordlogin
+                string brugernavn = "", passwordlogin = "",passwordinput; //opret string variabler brugernavn og passwordlogin
                 List<string> skrevetlogin = new List<string>(); //opret string list variable skrevetlogin
                 string[] gemtlogin = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt")); //læs og gem hvert linje i tekstfil i array
                 Console.WriteLine("Velkommen!");
@@ -125,11 +122,12 @@ namespace små_cases
                         Console.Clear();
                         Console.WriteLine("\nWelkommen ind!");
                         Console.Write("Tryk 1 for at starte app1\nTryk 2 for at starte app2\nTryk 3 for at ændre dit password: ");
-                        appmenu = Console.ReadLine().ToUpper();
+                        appmenu = Console.ReadLine();
                         if (appmenu == "1")
                         {
                             Console.WriteLine("App1");
                             Thread.Sleep(2000);
+                            Console.Clear();
                             continue;
                         }
                         else if (appmenu == "2")
@@ -140,9 +138,39 @@ namespace små_cases
                         }
                         else if (appmenu == "3")
                         {
-                            Console.WriteLine("Skriv dit nye password");
-                            passwordlogin = Console.ReadLine();
-
+                            Console.Write("\nSkriv dit nye password: ");
+                            passwordinput = Console.ReadLine();
+                            if (!Password.PasswdCheck(passwordinput, brugernavn))
+                            {
+                                continue;
+                            }
+                            else if (File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "passwdhistory.txt")).Contains(passwordinput))
+                            {
+                                Console.WriteLine("\nPassword må ikke matche tidligere brugte passwords");
+                                Thread.Sleep(2000);
+                                Console.Clear();
+                                continue;
+                            }
+                            else
+                            {
+                                string[] login = { brugernavn, passwordinput }; //lav string array der heder login, med brugernavn og passwordinput variabler
+                                try
+                                {
+                                    File.WriteAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt"), login); //prøver at skrive indeholdet af array til password.txt fil
+                                    File.AppendAllText(Path.Combine(Directory.GetCurrentDirectory(), "passwdhistory.txt"), Environment.NewLine + passwordinput); //prøver at skrive password til historik fil
+                                    Console.WriteLine("\nPassword ændret! Du bliver nu logget ud...");
+                                    Thread.Sleep(3000);
+                                    Console.Clear();
+                                    break;
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                    Thread.Sleep(3000);
+                                    Console.Clear();
+                                    continue;
+                                }
+                            }
 
                         }
                         else
