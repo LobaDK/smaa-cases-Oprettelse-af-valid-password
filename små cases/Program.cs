@@ -74,7 +74,7 @@ namespace små_cases
                             continue;
                         }
                         lastchar = passwordinput.Last();
-                        if (passwordvalidate.UsernameMatch(brugernavn, passwordinput))
+                        if (passwordvalidate.MatchUsername(brugernavn, passwordinput))
                         {
                             continue;
                         }
@@ -183,7 +183,7 @@ namespace små_cases
                 return false;
             }
         }
-        public bool UsernameMatch(string brugernavn, string passwordinput)
+        public bool MatchUsername(string brugernavn, string passwordinput)
         {
             if (brugernavn.ToLower() == passwordinput.ToLower()) //tjek om password matcher brugernavn
             {
