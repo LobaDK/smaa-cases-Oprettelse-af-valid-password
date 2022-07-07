@@ -69,7 +69,7 @@ namespace små_cases
                         Console.Write("Skriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
                         passwordinput = Console.ReadLine();
                         
-                        if (passwordvalidate.Empty(passwordinput))
+                        if (passwordvalidate.IsEmpty(passwordinput))
                         {
                             continue;
                         }
@@ -78,39 +78,24 @@ namespace små_cases
                         {
                             continue;
                         }
-                        else if (passwordinput.Length < 12) //tjek om password er under 12 tegn
+                        else if (passwordvalidate.IsOver12(passwordinput))
                         {
-                            Console.WriteLine("\nPassword skal minimum være 12 tegn langt");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
-                        else if (!passwordinput.Any(char.IsUpper) | !passwordinput.Any(char.IsLower)) //tjek om password ikke har store og små tegn
+                        else if (passwordvalidate.IsLowerAndUpper(passwordinput))
                         {
-                            Console.WriteLine("\nPassword skal have både store og små tegn");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
-                        else if (passwordinput.All(char.IsLetterOrDigit) | !passwordinput.Any(char.IsNumber)) //tjek om password kun har normale tegn
+                        else if (passwordvalidate.HasSpecialCharAndNumber(passwordinput))
                         {
-                            Console.WriteLine("\nPassword skal have mindst et special tegn og tal");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
-                        else if (char.IsDigit(passwordinput[0]) | char.IsDigit(lastchar)) //tjek om password starter eller slutter med et tal
+                        else if (passwordvalidate.StartOrEndWithNumber(passwordinput, lastchar))
                         {
-                            Console.WriteLine("\nPassword må ikke starte eller slutte med et tal");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
-                        else if (passwordinput.Any(char.IsWhiteSpace)) //tjek om password has et mellemrum/whitespace
+                        else if (passwordvalidate.HasSpace(passwordinput))
                         {
-                            Console.WriteLine("\nDer må ikke være mellemrum i passwordet");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
                         else
@@ -169,7 +154,7 @@ namespace små_cases
     }
     class Passwordvalidate
     {
-        public bool Empty(string passwordinput)
+        public bool IsEmpty(string passwordinput)
         {
             if (string.IsNullOrWhiteSpace(passwordinput)) //tjek om password er tomt eller kun whitespaces
             {
@@ -188,6 +173,76 @@ namespace små_cases
             if (brugernavn.ToLower() == passwordinput.ToLower()) //tjek om password matcher brugernavn
             {
                 Console.WriteLine("\nPassword må ikke matche brugernavn");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IsOver12(string passwordinput)
+        {
+            if (passwordinput.Length < 12) //tjek om password er under 12 tegn
+            {
+                Console.WriteLine("\nPassword skal minimum være 12 tegn langt");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IsLowerAndUpper(string passwordinput)
+        {
+            if (!passwordinput.Any(char.IsUpper) | !passwordinput.Any(char.IsLower)) //tjek om password ikke har store og små tegn
+            {
+                Console.WriteLine("\nPassword skal have både store og små tegn");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool HasSpecialCharAndNumber(string passwordinput)
+        {
+            if (passwordinput.All(char.IsLetterOrDigit) | !passwordinput.Any(char.IsNumber)) //tjek om password kun har normale tegn
+            {
+                Console.WriteLine("\nPassword skal have mindst et special tegn og tal");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool StartOrEndWithNumber(string passwordinput, char lastchar)
+        {
+            if (char.IsDigit(passwordinput[0]) | char.IsDigit(lastchar)) //tjek om password starter eller slutter med et tal
+            {
+                Console.WriteLine("\nPassword må ikke starte eller slutte med et tal");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool HasSpace(string passwordinput)
+        {
+            if (passwordinput.Any(char.IsWhiteSpace)) //tjek om password has et mellemrum/whitespace
+            {
+                Console.WriteLine("\nDer må ikke være mellemrum i passwordet");
                 Thread.Sleep(3000);
                 Console.Clear();
                 return true;
