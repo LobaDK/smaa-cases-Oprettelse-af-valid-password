@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace små_cases
 {
-    internal class Password
+    internal class Password : Passwordvalidate
     {
         static void Main(string[] args)
         {
@@ -65,21 +65,17 @@ namespace små_cases
                 {
                     do
                     {
+                        Passwordvalidate passwordvalidate = new Passwordvalidate();
                         Console.Write("Skriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
                         passwordinput = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(passwordinput)) //tjek om password er tomt eller kun whitespaces
+                        
+                        if (passwordvalidate.Empty(passwordinput))
                         {
-                            Console.WriteLine("\nPassword kan ikke være tomt");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
                         lastchar = passwordinput.Last();
-                        if (brugernavn.ToLower() == passwordinput.ToLower()) //tjek om password matcher brugernavn
+                        if (passwordvalidate.UsernameMatch(brugernavn, passwordinput))
                         {
-                            Console.WriteLine("\nPassword må ikke matche brugernavn");
-                            Thread.Sleep(3000);
-                            Console.Clear();
                             continue;
                         }
                         else if (passwordinput.Length < 12) //tjek om password er under 12 tegn
@@ -169,6 +165,37 @@ namespace små_cases
                     continue;
                 }
             } while (true);
+        }
+    }
+    class Passwordvalidate
+    {
+        public bool Empty(string passwordinput)
+        {
+            if (string.IsNullOrWhiteSpace(passwordinput)) //tjek om password er tomt eller kun whitespaces
+            {
+                Console.WriteLine("\nPassword kan ikke være tomt");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool UsernameMatch(string brugernavn, string passwordinput)
+        {
+            if (brugernavn.ToLower() == passwordinput.ToLower()) //tjek om password matcher brugernavn
+            {
+                Console.WriteLine("\nPassword må ikke matche brugernavn");
+                Thread.Sleep(3000);
+                Console.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
