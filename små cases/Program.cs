@@ -208,10 +208,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool MatchUsername(string brugernavn, string passwordinput) //opret bool MatchUsername metode
         {
@@ -222,10 +219,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool IsOver12(string passwordinput) //opret bool IsOver12 metode
         {
@@ -236,10 +230,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool IsLowerAndUpper(string passwordinput) //opret bool IsLowerandUpper metode
         {
@@ -250,10 +241,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool HasSpecialCharAndNumber(string passwordinput) //opret bool HasSpecialCharAndNumber metode
         {
@@ -264,10 +252,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool StartOrEndWithNumber(string passwordinput, char lastchar) //opret bool StartOrEndWithNumber metode
         {
@@ -278,10 +263,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
         public bool HasSpace(string passwordinput) //opret bool HasSpace metode
         {
@@ -292,10 +274,7 @@ namespace små_cases
                 Console.Clear();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
         }
     }
 }
