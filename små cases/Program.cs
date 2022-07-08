@@ -45,7 +45,7 @@ namespace små_cases
             }while (true);
             
         }
-        static void Create()
+        static void Create() //opret Create metode
         {
             string passwordinput; //opret passwordinput string variable
             string brugernavn; //opret brugernavn string variable
@@ -68,13 +68,13 @@ namespace små_cases
                         Console.Write("\nSkriv venligts et nyt kodeord. Det skal mindste være 12 tegn, anvende både store og små, mindst et tal og specialtegn, ikke starte eller slutte med tal, ingen mellemrum og ikke matche brugernavnet: "); //spørg brugeren om et password
                         passwordinput = Console.ReadLine();
                         
-                        if (!Password.PasswdCheck(passwordinput,brugernavn))
+                        if (!Password.PasswdCheck(passwordinput,brugernavn)) //brug opretet PasswdCheck metode fra Password klasse til at validere password
                         {
                             continue;
                         }
                         else
                         {
-                            string[] login = { brugernavn, passwordinput }; //lav string array der heder login, med brugernavn og passwordinput variabler
+                            string[] login = { brugernavn, passwordinput }; //opret string array der heder login, med brugernavn og passwordinput variabler
                             try 
                             {
                                 File.WriteAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt"), login); //prøver at skrive indeholdet af array til password.txt fil
@@ -105,7 +105,7 @@ namespace små_cases
             {
                 string brugernavn = "", passwordlogin = "",passwordinput; //opret string variabler brugernavn og passwordlogin
                 List<string> skrevetlogin = new List<string>(); //opret string list variable skrevetlogin
-                string[] gemtlogin = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt")); //læs og gem hvert linje i tekstfil i array
+                string[] gemtlogin = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "password.txt")); //læs og gem hvert linje i tekstfil fra array
                 Console.WriteLine("Velkommen!");
                 Console.WriteLine("\nSkriv dit brugernavn og password for at logge ind.");
                 Console.Write("\nBrugernavn: ");
@@ -123,28 +123,28 @@ namespace små_cases
                         Console.WriteLine("\nWelkommen ind!");
                         Console.Write("Tryk 1 for at starte app1\nTryk 2 for at starte app2\nTryk 3 for at ændre dit password: ");
                         appmenu = Console.ReadLine();
-                        if (appmenu == "1")
+                        if (appmenu == "1") //starter app1
                         {
-                            Console.WriteLine("App1");
+                            Console.WriteLine("\nApp1");
                             Thread.Sleep(2000);
                             Console.Clear();
                             continue;
                         }
-                        else if (appmenu == "2")
+                        else if (appmenu == "2") //starter app2
                         {
-                            Console.WriteLine("App2");
+                            Console.WriteLine("\nApp2");
                             Thread.Sleep(2000);
                             continue;
                         }
-                        else if (appmenu == "3")
+                        else if (appmenu == "3") //starter password ændring
                         {
                             Console.Write("\nSkriv dit nye password: ");
                             passwordinput = Console.ReadLine();
-                            if (!Password.PasswdCheck(passwordinput, brugernavn))
+                            if (!Password.PasswdCheck(passwordinput, brugernavn)) //brug opretet PasswdCheck metode fra Password klasse til at validere password
                             {
-                                continue;
+                                continue; //går tilbage hvis password ikke er valid
                             }
-                            else if (File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "passwdhistory.txt")).Contains(passwordinput))
+                            else if (File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "passwdhistory.txt")).Contains(passwordinput)) //tjek om password er i passwdhistory fil
                             {
                                 Console.WriteLine("\nPassword må ikke matche tidligere brugte passwords");
                                 Thread.Sleep(2000);
@@ -190,10 +190,10 @@ namespace små_cases
                 }
             } while (true);
         }
-        static bool PasswdCheck(string passwordinput, string brugernavn)
+        static bool PasswdCheck(string passwordinput, string brugernavn) //opret PasswdCheck metode der retunere false eller true boolean
         {
-            char lastchar = passwordinput.Last();
-            Passwordvalidate passwordvalidate = new Passwordvalidate();
+            char lastchar = passwordinput.Last(); //gem sidste tegn fra password i char variable
+            Passwordvalidate passwordvalidate = new Passwordvalidate(); //opret en nu instance af Passwordvalidate som passwordvalidate
             if (passwordvalidate.IsEmpty(passwordinput))
             {
                 return false;
