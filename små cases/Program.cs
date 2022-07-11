@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
 
-namespace små_cases
+namespace Oprettelse_af_valid_Password
 {
     internal class Password : Passwordvalidate
     {
@@ -196,31 +196,31 @@ namespace små_cases
             Passwordvalidate passwordvalidate = new Passwordvalidate(); //opret en nu instance af Passwordvalidate som passwordvalidate
             if (passwordvalidate.IsEmpty(passwordinput))
             {
-                return false;
+                return false; //hvis password er tomt
             }
             if (passwordvalidate.MatchUsername(brugernavn, passwordinput))
             {
-                return false;
+                return false; //hvis password matcher brugernavnet
             }
             else if (passwordvalidate.IsOver12(passwordinput))
             {
-                return false;
+                return false; //hvis passwoder er under 12 tegn
             }
             else if (passwordvalidate.IsLowerAndUpper(passwordinput))
             {
-                return false;
+                return false; //hvis password mangler store eller små bogstaver
             }
             else if (passwordvalidate.HasSpecialCharAndNumber(passwordinput))
             {
-                return false ;
+                return false; //hvis password mangler specielle tegn
             }
             else if (passwordvalidate.StartOrEndWithNumber(passwordinput, lastchar))
             {
-                return false;
+                return false; //hvis password starter eller slutter med tal
             }
             else if (passwordvalidate.HasSpace(passwordinput))
             {
-                return false;
+                return false; //hvis password har mellemrum
             }
             else return true;
         }
